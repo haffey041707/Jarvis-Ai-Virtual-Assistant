@@ -123,22 +123,20 @@
     .title h1{font-size:22px;letter-spacing:8px}
     .title .sub{font-size:8px;letter-spacing:3px}
     .pL,.pR,.eq{display:none}                       /* hide side telemetry + eq on phones */
-    .cgauge{width:64px;height:64px}
-    .cgauge.tl{top:12px;left:12px}.cgauge.tr{top:12px;right:12px}
-    .cgauge.bl{bottom:12px;left:12px}.cgauge.br{bottom:12px;right:12px}
-    .panel.pTL{left:88px;top:16px;font-size:10px}
-    .panel.pTR{right:88px;top:16px;font-size:10px}
-    .keybar{width:92vw;top:64px;font-size:11px;padding:10px 16px;text-align:center}
-    .hud{max-height:54vh}
-    .console{width:94vw;bottom:54px}
+    .cgauge{display:none}                            /* corner gauges don't fit small screens */
+    .panel.pTL{left:14px;top:14px;font-size:10px}
+    .panel.pTR{right:14px;top:14px;font-size:10px}
+    .keybar{width:92vw;top:58px;font-size:11px;padding:10px 16px;text-align:center}
+    .stage{align-items:center}
+    .hud{transform:scale(.66);transform-origin:center}   /* shrink the whole reactor to fit */
+    .console{width:94vw;bottom:48px;max-height:22vh}
     .strip{font-size:10px;letter-spacing:2px}
   }
   @media (max-width:480px){
-    .cgauge{display:none}                            /* too cramped on small phones */
+    .title{top:10px}.title h1{font-size:17px;letter-spacing:4px;padding-left:4px}
     .panel.pTL,.panel.pTR{font-size:9px;top:12px}
-    .panel.pTL{left:14px}.panel.pTR{right:14px}
-    .title{top:10px}.title h1{font-size:18px;letter-spacing:4px;padding-left:4px}
-    .hud{max-height:48vh}
+    .hud{transform:scale(.56);transform-origin:center}   /* phones: scale reactor to fit screen */
+    .keybar{top:52px}
   }
 </style>
 </head>
