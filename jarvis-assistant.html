@@ -137,12 +137,10 @@
     .cgauge.tl{top:10px;left:10px}.cgauge.tr{top:10px;right:10px}
     .cgauge.bl{bottom:10px;left:10px}.cgauge.br{bottom:10px;right:10px}
     .cgauge .lab{font-size:8px}.cgauge .lab small{font-size:6px}
-    .keybar{width:86vw;top:66px;font-size:11px;padding:10px 16px;text-align:center}
+    .keybar{width:72vw;max-width:300px;top:78px;font-size:11px;padding:10px 14px;text-align:center}
     .stage{align-items:center}
     .hud{transform:scale(.6);transform-origin:center}    /* shrink the reactor to fit */
-    .reply{width:84vw;bottom:118px;max-height:24vh;font-size:14px}
-    .phonebar{width:84vw;bottom:66px}
-    .strip{font-size:9px;letter-spacing:2px;bottom:36px}
+    .strip{font-size:9px;letter-spacing:2px;bottom:22px}
   }
   @media (max-width:480px){
     .title h1{font-size:17px;letter-spacing:4px;padding-left:4px}
@@ -150,6 +148,7 @@
     .cgauge.tl{top:8px;left:8px}.cgauge.tr{top:8px;right:8px}
     .cgauge.bl{bottom:8px;left:8px}.cgauge.br{bottom:8px;right:8px}
     .cgauge .lab{font-size:7px}.cgauge .lab small{font-size:5px}
+    .keybar{top:70px;width:78vw}
     .hud{transform:scale(.5);transform-origin:center}    /* scale reactor right down */
   }
 </style>
@@ -231,11 +230,6 @@
   </div></div>
 
   <div class="eq"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-  <div id="reply" class="reply"></div>
-  <div id="phonebar" class="phonebar">
-    <input id="ask" placeholder="Type a question, then press Enter…" autocomplete="off">
-    <button onclick="sendAsk()">▶</button>
-  </div>
   <div class="strip"><span class="dot"></span><span id="status">TAP TO ENGAGE</span></div>
 
   <div class="ov show" id="gate"><div class="card">
@@ -312,9 +306,8 @@ function speak(text,after){
     setState(wantEars?'LISTENING':'SYSTEM ONLINE'); if(wantEars)resumeEars(); if(after)after(); return; }
   speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text.replace(/[*#`]/g,''));u.rate=1.02;u.pitch=.9;const v=speechSynthesis.getVoices();u.voice=v.find(x=>/Daniel|Google UK English Male|Microsoft.*(David|Guy)/i.test(x.name))||v[0];
   u.onstart=()=>{mode('speaking');setState('SPEAKING');if(wantEars&&!earsOn)startEars();};u.onend=()=>{mode('idle');setState('SYSTEM ONLINE');resumeEars();if(after)after();};speechSynthesis.speak(u);}
-function reply(t){addLine('jv',t);showReply(t);speak(t);}
-function showReply(t){const r=$('reply');if(r){r.style.display='block';r.textContent=t;}}
-function sendAsk(){const v=$('ask').value.trim();if(!v)return;$('ask').value='';respond(v);}
+function reply(t){addLine('jv',t);speak(t);}
+function showReply(t){}    /* panel removed */
 let rec=null;const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 if(SR){rec=new SR();rec.lang='en-US';rec.continuous=true;rec.interimResults=false;
   rec.onresult=e=>{const t=e.results[e.results.length-1][0].transcript.trim();if(t){if(window.speechSynthesis&&speechSynthesis.speaking)speechSynthesis.cancel();respond(t);}};  // barge-in: stop talking when user speaks
@@ -356,13 +349,6 @@ window.addEventListener('pywebviewready',async()=>{
   try{ if(window.pywebview.api.has_key && await window.pywebview.api.has_key()) markKeyActive(); }catch(e){}
 });
 if(cfg.key) markKeyActive();   // browser mode: already-saved key
-
-// On phone / web (not the desktop app) → show a text box + visible answers so it always works
-if(!window.pywebview){
-  $('phonebar').style.display='flex';
-  showReply('Tap ENGAGE to speak, or type a question below. Add a 🔑 key for AI answers.');
-  $('ask').addEventListener('keydown',e=>{if(e.key==='Enter')sendAsk();});
-}
 </script>
 </body>
 </html>
