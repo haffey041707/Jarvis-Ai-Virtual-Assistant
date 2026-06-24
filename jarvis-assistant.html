@@ -130,23 +130,27 @@
 
   /* ===== RESPONSIVE / PHONE ===== */
   @media (max-width:820px){
-    .title h1{font-size:22px;letter-spacing:8px}
+    .title{top:8px}.title h1{font-size:20px;letter-spacing:7px}
     .title .sub{font-size:8px;letter-spacing:3px}
-    .pL,.pR,.eq{display:none}                       /* hide side telemetry + eq on phones */
-    .cgauge{display:none}                            /* corner gauges don't fit small screens */
-    .panel.pTL{left:14px;top:14px;font-size:10px}
-    .panel.pTR{right:14px;top:14px;font-size:10px}
-    .keybar{width:92vw;top:58px;font-size:11px;padding:10px 16px;text-align:center}
+    .pL,.pR,.eq,.panel.pTL,.panel.pTR{display:none}     /* hide side/text readouts, keep the 4 gauges */
+    .cgauge{width:58px;height:58px}                      /* show the four corner gauges, smaller */
+    .cgauge.tl{top:10px;left:10px}.cgauge.tr{top:10px;right:10px}
+    .cgauge.bl{bottom:10px;left:10px}.cgauge.br{bottom:10px;right:10px}
+    .cgauge .lab{font-size:8px}.cgauge .lab small{font-size:6px}
+    .keybar{width:86vw;top:66px;font-size:11px;padding:10px 16px;text-align:center}
     .stage{align-items:center}
-    .hud{transform:scale(.66);transform-origin:center}   /* shrink the whole reactor to fit */
-    .console{width:94vw;bottom:48px;max-height:22vh}
-    .strip{font-size:10px;letter-spacing:2px}
+    .hud{transform:scale(.6);transform-origin:center}    /* shrink the reactor to fit */
+    .reply{width:84vw;bottom:118px;max-height:24vh;font-size:14px}
+    .phonebar{width:84vw;bottom:66px}
+    .strip{font-size:9px;letter-spacing:2px;bottom:36px}
   }
   @media (max-width:480px){
-    .title{top:10px}.title h1{font-size:17px;letter-spacing:4px;padding-left:4px}
-    .panel.pTL,.panel.pTR{font-size:9px;top:12px}
-    .hud{transform:scale(.56);transform-origin:center}   /* phones: scale reactor to fit screen */
-    .keybar{top:52px}
+    .title h1{font-size:17px;letter-spacing:4px;padding-left:4px}
+    .cgauge{width:50px;height:50px}
+    .cgauge.tl{top:8px;left:8px}.cgauge.tr{top:8px;right:8px}
+    .cgauge.bl{bottom:8px;left:8px}.cgauge.br{bottom:8px;right:8px}
+    .cgauge .lab{font-size:7px}.cgauge .lab small{font-size:5px}
+    .hud{transform:scale(.5);transform-origin:center}    /* scale reactor right down */
   }
 </style>
 </head>
