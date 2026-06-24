@@ -68,24 +68,27 @@ def say(text):
         ui_emit("state", "LISTENING")
 
 def _watch_for_bargein(proc):
-    """While JARVIS is speaking, stop the moment the user starts talking (barge-in)."""
+    """Stop speaking only when the user is clearly LOUDER than JARVIS's own voice (echo-safe)."""
     if sd is None or np is None:
         try: proc.wait()
         except Exception: pass
         return
     blk = int(SAMPLE_RATE*0.05); q2: "queue.Queue" = queue.Queue()
     def cb(indata, frames, t, s): q2.put(indata.copy())
-    loud, t0 = 0, time.time()
+    cal, thresh, loud, t0 = [], None, 0, time.time()
     try:
         with sd.InputStream(samplerate=SAMPLE_RATE, channels=1, dtype="float32", blocksize=blk, callback=cb):
             while proc.poll() is None:
                 try: block = q2.get(timeout=0.15)[:, 0]
                 except queue.Empty: continue
-                if time.time() - t0 < 0.45:            # ignore the first moment (own-voice onset)
-                    continue
                 lvl = float(np.sqrt(np.mean(np.square(block, dtype=np.float64)))+1e-9)
-                loud = loud+1 if lvl > BARGE_LEVEL else 0
-                if loud >= 4:                          # ~0.2s of loud speech → user is interrupting
+                if time.time() - t0 < 0.7:             # calibrate to JARVIS's own echo first
+                    cal.append(lvl); continue
+                if thresh is None:                     # threshold must clearly exceed own playback
+                    base = sorted(cal)[len(cal)//2] if cal else 0.02
+                    thresh = max(base * 2.0, base + 0.05, BARGE_LEVEL)
+                loud = loud+1 if lvl > thresh else 0
+                if loud >= 4:                          # ~0.2s clearly above own voice → real barge-in
                     proc.terminate(); break
     except Exception:
         pass
