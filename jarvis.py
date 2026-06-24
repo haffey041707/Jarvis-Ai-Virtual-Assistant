@@ -37,6 +37,7 @@ SAMPLE_RATE = 16000
 SILENCE_HANG = 0.65        # end a phrase sooner → snappier responses
 START_LEVEL  = 0.014       # a touch more sensitive so it catches you
 MAX_PHRASE   = 12
+BARGE_LEVEL  = float(os.environ.get("JARVIS_BARGE", "0.07"))   # speak-over-JARVIS interrupt threshold
 
 # ============================================================ SCREEN EVENTS
 _ui_queue = None
@@ -59,10 +60,37 @@ def say(text):
         return
     ui_emit("state", "SPEAKING")
     _speaking.set()
-    try: subprocess.run(["say", "-v", CUR_VOICE, "-r", str(VOICE_RATE), text], check=False)
+    try:
+        proc = subprocess.Popen(["say", "-v", CUR_VOICE, "-r", str(VOICE_RATE), text])
+        _watch_for_bargein(proc)        # stop & listen if the user talks over JARVIS
     finally:
         _speaking.clear()
         ui_emit("state", "LISTENING")
+
+def _watch_for_bargein(proc):
+    """While JARVIS is speaking, stop the moment the user starts talking (barge-in)."""
+    if sd is None or np is None:
+        try: proc.wait()
+        except Exception: pass
+        return
+    blk = int(SAMPLE_RATE*0.05); q2: "queue.Queue" = queue.Queue()
+    def cb(indata, frames, t, s): q2.put(indata.copy())
+    loud, t0 = 0, time.time()
+    try:
+        with sd.InputStream(samplerate=SAMPLE_RATE, channels=1, dtype="float32", blocksize=blk, callback=cb):
+            while proc.poll() is None:
+                try: block = q2.get(timeout=0.15)[:, 0]
+                except queue.Empty: continue
+                if time.time() - t0 < 0.45:            # ignore the first moment (own-voice onset)
+                    continue
+                lvl = float(np.sqrt(np.mean(np.square(block, dtype=np.float64)))+1e-9)
+                loud = loud+1 if lvl > BARGE_LEVEL else 0
+                if loud >= 4:                          # ~0.2s of loud speech → user is interrupting
+                    proc.terminate(); break
+    except Exception:
+        pass
+    try: proc.wait(timeout=5)
+    except Exception: pass
 
 # ============================================================ MULTILINGUAL (English primary, auto-switch)
 VOICE_MAP = {}

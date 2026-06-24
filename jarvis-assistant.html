@@ -294,11 +294,11 @@ function speak(text,after){
   if(cfg.voice!=='1'||!window.speechSynthesis){ // VOICE OFF — text only
     setState(wantEars?'LISTENING':'SYSTEM ONLINE'); if(wantEars)resumeEars(); if(after)after(); return; }
   speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text.replace(/[*#`]/g,''));u.rate=1.02;u.pitch=.9;const v=speechSynthesis.getVoices();u.voice=v.find(x=>/Daniel|Google UK English Male|Microsoft.*(David|Guy)/i.test(x.name))||v[0];
-  u.onstart=()=>{mode('speaking');setState('SPEAKING');pauseEars();};u.onend=()=>{mode('idle');setState('SYSTEM ONLINE');resumeEars();if(after)after();};speechSynthesis.speak(u);}
+  u.onstart=()=>{mode('speaking');setState('SPEAKING');if(wantEars&&!earsOn)startEars();};u.onend=()=>{mode('idle');setState('SYSTEM ONLINE');resumeEars();if(after)after();};speechSynthesis.speak(u);}
 function reply(t){addLine('jv',t);speak(t);}
 let rec=null;const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 if(SR){rec=new SR();rec.lang='en-US';rec.continuous=true;rec.interimResults=false;
-  rec.onresult=e=>{const t=e.results[e.results.length-1][0].transcript.trim();if(t)respond(t);};
+  rec.onresult=e=>{const t=e.results[e.results.length-1][0].transcript.trim();if(t){if(window.speechSynthesis&&speechSynthesis.speaking)speechSynthesis.cancel();respond(t);}};  // barge-in: stop talking when user speaks
   rec.onend=()=>{earsOn=false;if(wantEars)startEars();};
   rec.onerror=e=>{if(e.error==='not-allowed'){setStatus('MIC BLOCKED');wantEars=false;}};}
 function startEars(){if(!rec||earsOn||!wantEars)return;try{rec.start();earsOn=true;mode('listening');setState('LISTENING');setStatus('● LISTENING');}catch(e){}}
