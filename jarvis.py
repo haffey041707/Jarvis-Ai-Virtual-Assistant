@@ -38,6 +38,7 @@ SILENCE_HANG = 0.65        # end a phrase sooner → snappier responses
 START_LEVEL  = 0.014       # a touch more sensitive so it catches you
 MAX_PHRASE   = 12
 BARGE_LEVEL  = float(os.environ.get("JARVIS_BARGE", "0.07"))   # speak-over-JARVIS interrupt threshold
+BARGE_ON     = os.environ.get("JARVIS_BARGE_ON", "0") == "1"   # barge-in OFF by default (keeps mic rock-solid)
 
 # ============================================================ SCREEN EVENTS
 _ui_queue = None
@@ -61,8 +62,10 @@ def say(text):
     ui_emit("state", "SPEAKING")
     _speaking.set()
     try:
-        proc = subprocess.Popen(["say", "-v", CUR_VOICE, "-r", str(VOICE_RATE), text])
-        _watch_for_bargein(proc)        # stop & listen if the user talks over JARVIS
+        if BARGE_ON:                    # optional barge-in (opt in with JARVIS_BARGE_ON=1)
+            _watch_for_bargein(subprocess.Popen(["say", "-v", CUR_VOICE, "-r", str(VOICE_RATE), text]))
+        else:                           # default: simple, single-stream, rock-solid
+            subprocess.run(["say", "-v", CUR_VOICE, "-r", str(VOICE_RATE), text], check=False)
     finally:
         _speaking.clear()
         ui_emit("state", "LISTENING")
@@ -420,13 +423,13 @@ def listen_phrase(timeout=None):
                     block = qbuf.get(timeout=1.0)[:,0]; empties = 0
                 except queue.Empty:
                     empties += 1
-                    if empties >= 5:                      # ~5s with no callbacks → dead stream
+                    if empties >= 3:                      # ~3s with no callbacks → dead stream
                         need_reset = True; break
                     if timeout and time.time()-t0>timeout: return None
                     continue
                 lvl = float(np.sqrt(np.mean(np.square(block,dtype=np.float64)))+1e-9)
                 deadzero = deadzero+1 if lvl < 0.0004 else 0   # a live mic always has faint noise
-                if deadzero >= 240:                       # ~12s of pure digital silence → mic stale
+                if deadzero >= 60:                        # ~3s of pure digital silence → mic stale, rebuild
                     need_reset = True; break
                 if not capturing:
                     if lvl>START_LEVEL: capturing,frames,silence_for=True,[block],0.0
