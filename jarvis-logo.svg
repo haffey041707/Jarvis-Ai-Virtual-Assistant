@@ -1,0 +1,204 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     viewBox="0 0 1600 1600" width="1600" height="1600" role="img" aria-label="JARVIS">
+  <title>JARVIS — Next-Generation AI Assistant</title>
+
+  <defs>
+    <!-- ===================== FONTS ===================== -->
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600&amp;display=swap');
+      .wordmark {
+        font-family: 'Orbitron', 'Eurostile', 'Arial Black', sans-serif;
+        font-weight: 900;
+        letter-spacing: 26px;
+      }
+      .micro {
+        font-family: 'Rajdhani', 'Consolas', monospace;
+        font-weight: 600;
+      }
+      @keyframes spin   { to { transform: rotate(360deg); } }
+      @keyframes spinR  { to { transform: rotate(-360deg); } }
+      @keyframes pulse  { 0%,100% { opacity:.35 } 50% { opacity:1 } }
+      @keyframes flow   { to { stroke-dashoffset: -400; } }
+      .rot   { transform-origin: 800px 700px; animation: spin 60s linear infinite; }
+      .rotR  { transform-origin: 800px 700px; animation: spinR 90s linear infinite; }
+      .rotF  { transform-origin: 800px 700px; animation: spin 26s linear infinite; }
+      .pul   { animation: pulse 3.2s ease-in-out infinite; }
+      .flow  { stroke-dasharray: 14 26; animation: flow 9s linear infinite; }
+    </style>
+
+    <!-- ===================== GRADIENTS ===================== -->
+    <radialGradient id="bg" cx="50%" cy="44%" r="75%">
+      <stop offset="0%"  stop-color="#1b1d52"/>
+      <stop offset="38%" stop-color="#0d1038"/>
+      <stop offset="72%" stop-color="#070922"/>
+      <stop offset="100%" stop-color="#03040f"/>
+    </radialGradient>
+
+    <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"  stop-color="#8a6bff" stop-opacity="0.9"/>
+      <stop offset="35%" stop-color="#5a4bff" stop-opacity="0.45"/>
+      <stop offset="70%" stop-color="#2b2b8f" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+
+    <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#eaf3ff"/>
+      <stop offset="22%"  stop-color="#a9c6ff"/>
+      <stop offset="50%"  stop-color="#6f8dff"/>
+      <stop offset="62%"  stop-color="#9b7bff"/>
+      <stop offset="100%" stop-color="#c9b6ff"/>
+    </linearGradient>
+
+    <linearGradient id="holoEdge" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"   stop-color="#39c6ff"/>
+      <stop offset="50%"  stop-color="#7b8bff"/>
+      <stop offset="100%" stop-color="#b06bff"/>
+    </linearGradient>
+
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"   stop-color="#2bd4ff"/>
+      <stop offset="50%"  stop-color="#5a6bff"/>
+      <stop offset="100%" stop-color="#a14bff"/>
+    </linearGradient>
+
+    <radialGradient id="vignette" cx="50%" cy="50%" r="62%">
+      <stop offset="60%" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.7"/>
+    </radialGradient>
+
+    <!-- ===================== FILTERS ===================== -->
+    <filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="9" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <filter id="bigGlow" x="-120%" y="-120%" width="340%" height="340%">
+      <feGaussianBlur stdDeviation="26" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <filter id="textGlow" x="-40%" y="-80%" width="180%" height="260%">
+      <feGaussianBlur stdDeviation="7" result="g"/>
+      <feColorMatrix in="g" type="matrix"
+        values="0 0 0 0 0.36   0 0 0 0 0.55  0 0 0 0 1   0 0 0 1 0" result="gc"/>
+      <feMerge><feMergeNode in="gc"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <!-- node dot symbol -->
+    <radialGradient id="node" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="40%" stop-color="#8ad8ff"/>
+      <stop offset="100%" stop-color="#5a4bff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- ===================== BACKGROUND ===================== -->
+  <rect width="1600" height="1600" fill="url(#bg)"/>
+
+  <!-- faint tech grid -->
+  <g stroke="#3550c8" stroke-width="1" opacity="0.06">
+    <g id="vlines">
+      <line x1="100" y1="0" x2="100" y2="1600"/><line x1="300" y1="0" x2="300" y2="1600"/>
+      <line x1="500" y1="0" x2="500" y2="1600"/><line x1="700" y1="0" x2="700" y2="1600"/>
+      <line x1="900" y1="0" x2="900" y2="1600"/><line x1="1100" y1="0" x2="1100" y2="1600"/>
+      <line x1="1300" y1="0" x2="1300" y2="1600"/><line x1="1500" y1="0" x2="1500" y2="1600"/>
+    </g>
+    <g>
+      <line x1="0" y1="100" x2="1600" y2="100"/><line x1="0" y1="300" x2="1600" y2="300"/>
+      <line x1="0" y1="500" x2="1600" y2="500"/><line x1="0" y1="700" x2="1600" y2="700"/>
+      <line x1="0" y1="900" x2="1600" y2="900"/><line x1="0" y1="1100" x2="1600" y2="1100"/>
+      <line x1="0" y1="1300" x2="1600" y2="1300"/>
+    </g>
+  </g>
+
+  <!-- ===================== HUD / CORE  (centered at 800,700) ===================== -->
+  <g>
+    <!-- central energy glow -->
+    <circle cx="800" cy="700" r="430" fill="url(#coreGlow)" filter="url(#bigGlow)"/>
+
+    <!-- outer dashed ring, slow spin -->
+    <g class="rot" fill="none">
+      <circle cx="800" cy="700" r="470" stroke="url(#ring)" stroke-width="2"
+              stroke-dasharray="2 16" opacity="0.7"/>
+      <circle cx="800" cy="700" r="446" stroke="#2bd4ff" stroke-width="3"
+              stroke-dasharray="120 60 8 60" opacity="0.85" filter="url(#softGlow)"/>
+    </g>
+
+    <!-- counter-rotating tick ring -->
+    <g class="rotR" fill="none">
+      <circle cx="800" cy="700" r="408" stroke="url(#ring)" stroke-width="1.5"
+              stroke-dasharray="4 22" opacity="0.6"/>
+      <!-- HUD bracket arcs -->
+      <path d="M 800 320 A 380 380 0 0 1 1130 510" stroke="#7b8bff" stroke-width="5"
+            stroke-linecap="round" filter="url(#softGlow)"/>
+      <path d="M 800 1080 A 380 380 0 0 1 470 890" stroke="#b06bff" stroke-width="5"
+            stroke-linecap="round" filter="url(#softGlow)"/>
+    </g>
+
+    <!-- fast inner data ring -->
+    <g class="rotF" fill="none">
+      <circle cx="800" cy="700" r="348" stroke="url(#holoEdge)" stroke-width="2.5"
+              class="flow" opacity="0.9" filter="url(#softGlow)"/>
+    </g>
+
+    <!-- hexagonal AI core frame -->
+    <g class="pul" fill="none" stroke="url(#holoEdge)" stroke-width="2" opacity="0.55"
+       filter="url(#softGlow)">
+      <polygon points="800,470 990,580 990,800 800,910 610,800 610,580"/>
+      <polygon points="800,540 930,615 930,765 800,840 670,765 670,615" opacity="0.6"/>
+    </g>
+
+    <!-- corner HUD ticks -->
+    <g stroke="#39c6ff" stroke-width="3" stroke-linecap="round" opacity="0.8" filter="url(#softGlow)">
+      <path d="M470 700 h-34 M1130 700 h34 M800 270 v-34 M800 1130 v34"/>
+    </g>
+  </g>
+
+  <!-- ===================== NEURAL NETWORK (subtle, behind text) ===================== -->
+  <g opacity="0.85">
+    <g stroke="url(#holoEdge)" stroke-width="1.6" fill="none" opacity="0.5" class="flow">
+      <path d="M800 700 L612 560"/><path d="M800 700 L988 560"/>
+      <path d="M800 700 L600 760"/><path d="M800 700 L1000 760"/>
+      <path d="M800 700 L700 880"/><path d="M800 700 L900 880"/>
+      <path d="M612 560 L700 880"/><path d="M988 560 L900 880"/>
+      <path d="M600 760 L900 880"/><path d="M1000 760 L700 880"/>
+    </g>
+    <g class="pul">
+      <circle cx="800" cy="700" r="16" fill="url(#node)"/>
+      <circle cx="612" cy="560" r="9"  fill="url(#node)"/>
+      <circle cx="988" cy="560" r="9"  fill="url(#node)"/>
+      <circle cx="600" cy="760" r="8"  fill="url(#node)"/>
+      <circle cx="1000" cy="760" r="8" fill="url(#node)"/>
+      <circle cx="700" cy="880" r="9"  fill="url(#node)"/>
+      <circle cx="900" cy="880" r="9"  fill="url(#node)"/>
+    </g>
+  </g>
+
+  <!-- circuitry accents bottom -->
+  <g stroke="url(#holoEdge)" stroke-width="2" fill="none" opacity="0.4" stroke-linecap="round" filter="url(#softGlow)">
+    <path d="M330 980 h120 l40 40 h90"/><circle cx="330" cy="980" r="5" fill="#39c6ff" stroke="none"/>
+    <path d="M1270 980 h-120 l-40 40 h-90"/><circle cx="1270" cy="980" r="5" fill="#b06bff" stroke="none"/>
+  </g>
+
+  <!-- ===================== WORDMARK ===================== -->
+  <!-- glow underlay -->
+  <text x="812" y="722" text-anchor="middle" class="wordmark" font-size="190"
+        fill="#5a7bff" filter="url(#textGlow)" opacity="0.9"
+        dominant-baseline="middle">JARVIS</text>
+  <!-- metallic holographic fill -->
+  <text x="812" y="722" text-anchor="middle" class="wordmark" font-size="190"
+        fill="url(#metal)" stroke="url(#holoEdge)" stroke-width="1.2"
+        dominant-baseline="middle">JARVIS</text>
+
+  <!-- tagline -->
+  <text x="812" y="858" text-anchor="middle" class="micro" font-size="34"
+        fill="#7fa8ff" letter-spacing="22" opacity="0.9">NEXT&#8211;GENERATION&#160;&#160;AI&#160;&#160;ASSISTANT</text>
+
+  <!-- top status line -->
+  <g class="micro" fill="#5fd0ff" opacity="0.65" font-size="22" letter-spacing="6">
+    <text x="800" y="200" text-anchor="middle">&#9679;&#160;&#160;SYSTEM&#160;ONLINE&#160;&#160;&#9679;&#160;&#160;NEURAL&#160;CORE&#160;ACTIVE&#160;&#160;&#9679;</text>
+  </g>
+
+  <!-- ===================== VIGNETTE ===================== -->
+  <rect width="1600" height="1600" fill="url(#vignette)"/>
+</svg>

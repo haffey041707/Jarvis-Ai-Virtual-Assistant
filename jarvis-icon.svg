@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024" role="img" aria-label="JARVIS icon">
+  <title>JARVIS App Icon</title>
+  <defs>
+    <radialGradient id="ibg" cx="50%" cy="42%" r="75%">
+      <stop offset="0%" stop-color="#23266b"/><stop offset="45%" stop-color="#0e1240"/>
+      <stop offset="100%" stop-color="#05061a"/>
+    </radialGradient>
+    <radialGradient id="iglow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#9a7bff" stop-opacity="0.9"/>
+      <stop offset="55%" stop-color="#5a4bff" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="imetal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#eaf3ff"/><stop offset="45%" stop-color="#6f8dff"/>
+      <stop offset="62%" stop-color="#9b7bff"/><stop offset="100%" stop-color="#c9b6ff"/>
+    </linearGradient>
+    <linearGradient id="iholo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2bd4ff"/><stop offset="55%" stop-color="#5a6bff"/>
+      <stop offset="100%" stop-color="#a14bff"/>
+    </linearGradient>
+    <filter id="ig" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="10" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="round"><rect x="0" y="0" width="1024" height="1024" rx="225"/></clipPath>
+  </defs>
+
+  <g clip-path="url(#round)">
+    <rect width="1024" height="1024" fill="url(#ibg)"/>
+    <circle cx="512" cy="470" r="360" fill="url(#iglow)" filter="url(#ig)"/>
+
+    <!-- HUD rings -->
+    <g fill="none" filter="url(#ig)">
+      <circle cx="512" cy="512" r="350" stroke="url(#iholo)" stroke-width="3" stroke-dasharray="3 18" opacity="0.7"/>
+      <path d="M512 182 A 330 330 0 0 1 800 360" stroke="#7b8bff" stroke-width="7" stroke-linecap="round"/>
+      <path d="M512 842 A 330 330 0 0 1 224 664" stroke="#b06bff" stroke-width="7" stroke-linecap="round"/>
+      <circle cx="512" cy="512" r="300" stroke="#2bd4ff" stroke-width="2" stroke-dasharray="100 50 6 50" opacity="0.8"/>
+    </g>
+
+    <!-- hex core -->
+    <polygon points="512,300 690,405 690,615 512,720 334,615 334,405"
+             fill="none" stroke="url(#iholo)" stroke-width="3" opacity="0.55" filter="url(#ig)"/>
+
+    <!-- Monogram J -->
+    <g filter="url(#ig)">
+      <text x="512" y="560" text-anchor="middle" dominant-baseline="middle"
+            font-family="'Orbitron','Arial Black',sans-serif" font-weight="900" font-size="420"
+            fill="url(#imetal)" stroke="url(#iholo)" stroke-width="3">J</text>
+    </g>
+
+    <!-- wordmark small -->
+    <text x="512" y="860" text-anchor="middle"
+          font-family="'Orbitron','Arial Black',sans-serif" font-weight="700" font-size="92"
+          letter-spacing="14" fill="url(#imetal)">JARVIS</text>
+  </g>
+</svg>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JARVIS — Standby</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{ --cy:#22e3ff; --gold:#ffb347; --ink:#02060c; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden}
+  body{background:#000;color:var(--cy);font-family:'Share Tech Mono',monospace;height:100vh;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:none}
+  .bg{position:fixed;inset:0;z-index:-3;background:radial-gradient(circle at 50% 46%,#05283b 0%,#02101a 45%,#000 80%)}
+  .scan{position:fixed;inset:0;z-index:5;pointer-events:none;mix-blend-mode:overlay;opacity:.35;
+    background:repeating-linear-gradient(0deg,#0000 0 2px,#0b1a2455 2px 4px)}
+  .vig{position:fixed;inset:0;z-index:4;pointer-events:none;background:radial-gradient(circle at 50% 50%,#0000 50%,#000c 100%)}
+
+  .clock{position:fixed;top:6%;left:50%;transform:translateX(-50%);text-align:center;z-index:6}
+  .clock .t{font-family:'Orbitron';font-weight:700;font-size:54px;letter-spacing:8px;color:#dffaff;text-shadow:0 0 24px var(--cy)}
+  .clock .d{font-size:13px;letter-spacing:8px;color:var(--cy);opacity:.7;margin-top:6px}
+
+  .reactor-wrap{position:relative;width:440px;height:440px;display:grid;place-items:center}
+  .ring{position:absolute;border-radius:50%;border:2px solid transparent}
+  .r1{width:440px;height:440px;border-top-color:var(--cy);border-right-color:#3a6cff;animation:spin 14s linear infinite}
+  .r2{width:380px;height:380px;border-bottom-color:var(--gold);border-left-color:#3a6cff;animation:spin 9s linear infinite reverse}
+  .r3{width:320px;height:320px;border-top-color:#3a6cff;border-left-color:var(--cy);opacity:.6;animation:spin 18s linear infinite}
+  .r4{width:250px;height:250px;border:1px dashed #1ee0ff55;animation:spin 24s linear infinite reverse}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .core{width:150px;height:150px;border-radius:50%;
+    background:radial-gradient(circle at 50% 42%,#ffffff,#bfeaff 18%,#39d8ff 45%,#0a86c8 72%,#063a55);
+    box-shadow:0 0 60px #2fd5ffcc,0 0 140px #1ee0ff66,inset 0 0 40px #aef3ff;animation:pulse 3s ease-in-out infinite}
+  @keyframes pulse{0%,100%{transform:scale(1);filter:brightness(1)}50%{transform:scale(1.06);filter:brightness(1.25)}}
+
+  .prompt{margin-top:48px;text-align:center;z-index:6}
+  .finger{font-size:40px;animation:fp 1.8s ease-in-out infinite}
+  @keyframes fp{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.12)}}
+  .prompt .line{font-family:'Orbitron';font-size:16px;letter-spacing:6px;color:#dffaff;
+    text-shadow:0 0 16px var(--cy);margin-top:14px;animation:glow 2.4s ease-in-out infinite}
+  @keyframes glow{0%,100%{opacity:.55}50%{opacity:1}}
+  .prompt .sub{font-size:12px;letter-spacing:4px;color:var(--cy);opacity:.6;margin-top:8px}
+
+  .ticker{position:fixed;bottom:5%;left:0;width:100%;overflow:hidden;z-index:6;opacity:.5}
+  .ticker span{display:inline-block;white-space:nowrap;font-size:12px;letter-spacing:3px;color:var(--cy);
+    animation:slide 22s linear infinite}
+  @keyframes slide{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
+  @media (max-width:560px){
+    .clock .t{font-size:38px;letter-spacing:4px}.clock .d{font-size:10px;letter-spacing:4px}
+    .reactor-wrap{width:300px;height:300px}
+    .r1{width:300px;height:300px}.r2{width:260px;height:260px}.r3{width:220px;height:220px}.r4{width:170px;height:170px}
+    .core{width:110px;height:110px}
+    .prompt .line{font-size:12px;letter-spacing:3px;padding:0 18px}.finger{font-size:32px}
+  }
+</style>
+</head>
+<body>
+  <div class="bg"></div><div class="scan"></div><div class="vig"></div>
+
+  <div class="clock"><div class="t" id="t">--:--</div><div class="d" id="d">----</div></div>
+
+  <div class="reactor-wrap">
+    <div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><div class="ring r4"></div>
+    <div class="core"></div>
+  </div>
+
+  <div class="prompt">
+    <div class="finger">👆</div>
+    <div class="line">UNLOCK WITH FINGERPRINT TO START YOUR DAY WITH JARVIS</div>
+    <div class="sub">SYSTEM IN STANDBY · BIOMETRIC LOCK ENGAGED</div>
+  </div>
+
+  <div class="ticker"><span>● J.A.R.V.I.S STANDBY · ALL SYSTEMS NOMINAL · AWAITING OWNER · NEURAL CORE IDLE · SECURITY ACTIVE · ● J.A.R.V.I.S STANDBY · ALL SYSTEMS NOMINAL · AWAITING OWNER ·</span></div>
+
+<script>
+  function clk(){const d=new Date();
+    document.getElementById('t').textContent=d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+    document.getElementById('d').textContent=d.toLocaleDateString(undefined,{weekday:'long',day:'2-digit',month:'long',year:'numeric'}).toUpperCase();}
+  setInterval(clk,1000);clk();
+</script>
+</body>
+</html>

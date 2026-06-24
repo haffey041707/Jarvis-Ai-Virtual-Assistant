@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JARVIS — Brand Identity</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin:0; background:#04050f; color:#9fb6ff;
+    font-family:'Rajdhani',system-ui,sans-serif;
+    display:flex; flex-direction:column; align-items:center; padding:40px 16px 80px;
+  }
+  h1 { font-family:'Orbitron'; letter-spacing:8px; color:#cdd9ff; font-weight:700;
+       font-size:18px; margin:0 0 4px; }
+  p.sub { color:#5f78c8; letter-spacing:3px; margin:0 0 34px; font-size:13px; }
+  .stage {
+    width:min(760px,94vw); border-radius:22px; overflow:hidden;
+    box-shadow:0 0 80px rgba(80,90,255,.28), inset 0 0 0 1px rgba(120,140,255,.18);
+  }
+  .stage img, .stage object { width:100%; display:block; }
+  .row { display:flex; gap:24px; margin-top:34px; flex-wrap:wrap; justify-content:center; }
+  .card { background:rgba(20,24,60,.45); border:1px solid rgba(110,130,255,.2);
+          border-radius:18px; padding:18px; width:240px; text-align:center; }
+  .card object, .card img { width:170px; height:170px; }
+  .card span { display:block; margin-top:10px; font-size:12px; letter-spacing:2px; color:#8aa0ff; }
+  .tools { margin-top:36px; display:flex; gap:14px; flex-wrap:wrap; justify-content:center; }
+  button {
+    font-family:'Orbitron'; font-size:12px; letter-spacing:2px; cursor:pointer;
+    color:#dfe7ff; background:linear-gradient(135deg,#2746c8,#7b2fd0);
+    border:1px solid rgba(150,170,255,.5); border-radius:12px; padding:12px 20px;
+    transition:.2s; }
+  button:hover { filter:brightness(1.25); box-shadow:0 0 24px rgba(120,90,255,.6); }
+  .note { margin-top:24px; font-size:12px; color:#5168a8; max-width:620px; text-align:center; line-height:1.6; }
+</style>
+</head>
+<body>
+  <h1>J A R V I S</h1>
+  <p class="sub">NEXT-GENERATION AI ASSISTANT · BRAND IDENTITY</p>
+
+  <div class="stage">
+    <object data="jarvis-logo.svg" type="image/svg+xml" aria-label="JARVIS primary logo"></object>
+  </div>
+
+  <div class="row">
+    <div class="card">
+      <object data="jarvis-icon.svg" type="image/svg+xml" aria-label="JARVIS app icon"></object>
+      <span>APP ICON · 1024²</span>
+    </div>
+    <div class="card" style="display:flex;flex-direction:column;justify-content:center">
+      <div style="background:#fff;border-radius:12px;padding:14px">
+        <object data="jarvis-icon.svg" type="image/svg+xml" style="height:150px" aria-label="icon on light"></object>
+      </div>
+      <span>ON LIGHT SURFACE</span>
+    </div>
+  </div>
+
+  <div class="tools">
+    <button onclick="exportPNG('jarvis-logo.svg',1600,1600,'JARVIS-logo-1600.png')">⬇ LOGO PNG 1600²</button>
+    <button onclick="exportPNG('jarvis-logo.svg',3200,3200,'JARVIS-logo-3200.png')">⬇ LOGO PNG 3200²</button>
+    <button onclick="exportPNG('jarvis-icon.svg',1024,1024,'JARVIS-icon-1024.png')">⬇ ICON PNG 1024²</button>
+  </div>
+
+  <p class="note">
+    Vector SVG = infinitely sharp at any resolution (true 8K-ready). Use the buttons to rasterize
+    PNGs locally in your browser. Open this file: <b>open JARVIS-brand/index.html</b>
+  </p>
+
+<script>
+async function exportPNG(url, w, h, name){
+  const txt = await (await fetch(url)).text();
+  const blob = new Blob([txt], {type:'image/svg+xml;charset=utf-8'});
+  const u = URL.createObjectURL(blob);
+  const img = new Image();
+  img.onload = () => {
+    const c = document.createElement('canvas'); c.width=w; c.height=h;
+    const ctx = c.getContext('2d'); ctx.drawImage(img,0,0,w,h);
+    URL.revokeObjectURL(u);
+    c.toBlob(b => {
+      const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=name; a.click();
+    });
+  };
+  img.src = u;
+}
+</script>
+</body>
+</html>

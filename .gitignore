@@ -1,0 +1,15 @@
+# --- secret API key (NEVER commit) ---
+.jarvis_key
+
+# (face data .face/ is intentionally committed, per owner's request)
+
+# --- environment / build ---
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# --- os / logs ---
+.DS_Store
+*.log
+/tmp/

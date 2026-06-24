@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JARVIS — Authentication</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{ --cy:#22e3ff; --gold:#ffb347; --red:#ff5a4d; --green:#3dffa0; --ink:#02060c; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden}
+  body{background:var(--ink);color:var(--cy);font-family:'Share Tech Mono',monospace;height:100vh;
+    display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .bg{position:fixed;inset:0;z-index:-3;background:radial-gradient(circle at 50% 45%,#063550 0%,#04141f 42%,#01070d 78%,#000 100%)}
+  .grid{position:fixed;inset:0;z-index:-2;opacity:.10;background-image:radial-gradient(circle,#22e3ff33 1px,transparent 1.4px);
+    background-size:30px 30px;mask:radial-gradient(circle at 50% 50%,#000 25%,transparent 75%)}
+  .scan{position:fixed;inset:0;z-index:5;pointer-events:none;mix-blend-mode:overlay;opacity:.4;
+    background:repeating-linear-gradient(0deg,#0000 0 2px,#0b1a2455 2px 4px)}
+  .vig{position:fixed;inset:0;z-index:4;pointer-events:none;background:radial-gradient(circle at 50% 50%,#0000 52%,#000b 100%)}
+  .corner{position:fixed;width:120px;height:120px;border:2px solid var(--cy);opacity:.5;z-index:3;filter:drop-shadow(0 0 6px #22e3ff88)}
+  .tl{top:22px;left:22px;border-right:0;border-bottom:0}.tr{top:22px;right:22px;border-left:0;border-bottom:0}
+  .bl{bottom:22px;left:22px;border-right:0;border-top:0}.br{bottom:22px;right:22px;border-left:0;border-top:0}
+
+  h1{font-family:'Orbitron';font-weight:900;font-size:26px;letter-spacing:14px;color:#dffaff;
+    text-shadow:0 0 18px var(--cy);padding-left:14px;margin-bottom:4px}
+  .sub{font-size:11px;letter-spacing:6px;color:var(--cy);opacity:.7;margin-bottom:28px}
+
+  .scanner{position:relative;width:340px;height:340px;display:grid;place-items:center}
+  .ring{position:absolute;border-radius:50%;border:2px solid transparent}
+  .r1{width:340px;height:340px;border-top-color:var(--cy);border-right-color:#3a6cff;animation:spin 6s linear infinite}
+  .r2{width:300px;height:300px;border-bottom-color:var(--gold);border-left-color:#3a6cff;animation:spin 4s linear infinite reverse}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .frame{width:260px;height:260px;border-radius:50%;overflow:hidden;position:relative;
+    border:2px solid var(--cy);box-shadow:0 0 40px rgba(34,227,255,.45),inset 0 0 30px rgba(0,0,0,.6)}
+  #cam{width:100%;height:100%;object-fit:cover;display:block;background:#03101a}
+  /* faint moving wash */
+  .sweepline{position:absolute;left:0;right:0;height:50%;
+    background:linear-gradient(#22e3ff00,#22e3ff22);animation:sweep 2.6s ease-in-out infinite}
+  @keyframes sweep{0%{top:-50%}100%{top:100%}}
+  /* bright scanning RAY across the face */
+  .ray{position:absolute;left:0;right:0;height:3px;border-radius:3px;
+    background:linear-gradient(90deg,transparent,var(--cy),#eaffff,var(--cy),transparent);
+    box-shadow:0 0 18px var(--cy),0 0 34px var(--cy);animation:ray 2.1s cubic-bezier(.45,0,.55,1) infinite}
+  @keyframes ray{0%{top:4%;opacity:.3}50%{top:94%;opacity:1}100%{top:4%;opacity:.3}}
+  /* success / fail states */
+  .check{position:absolute;inset:0;display:none;place-items:center;font-size:96px;color:var(--green);
+    text-shadow:0 0 34px var(--green);animation:pop .45s ease}
+  @keyframes pop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+  .granted .ray{display:none}
+  .granted .check{display:grid}
+  .granted .frame{border-color:var(--green);box-shadow:0 0 56px rgba(61,255,160,.7),inset 0 0 30px rgba(0,0,0,.5)}
+  .granted .r1{border-top-color:var(--green);border-right-color:var(--green);animation-duration:2.4s}
+  .granted .r2{border-bottom-color:var(--green);border-left-color:var(--green)}
+  .denied .ray{background:linear-gradient(90deg,transparent,var(--red),#fff,var(--red),transparent);box-shadow:0 0 18px var(--red)}
+  .denied .frame{border-color:var(--red);box-shadow:0 0 44px rgba(255,90,77,.55)}
+  .reticle{position:absolute;width:260px;height:260px;pointer-events:none}
+  .reticle::before,.reticle::after{content:'';position:absolute;background:var(--cy);opacity:.6}
+  .reticle::before{left:50%;top:8px;bottom:8px;width:1px;transform:translateX(-50%)}
+  .reticle::after{top:50%;left:8px;right:8px;height:1px;transform:translateY(-50%)}
+
+  .status{margin-top:30px;font-family:'Orbitron';font-size:15px;letter-spacing:4px;color:var(--cy);
+    text-shadow:0 0 14px currentColor;min-height:22px;text-align:center;padding:0 16px}
+  @media (max-width:520px){
+    h1{font-size:20px;letter-spacing:8px}
+    .scanner{width:260px;height:260px}
+    .r1{width:260px;height:260px}.r2{width:226px;height:226px}
+    .frame{width:200px;height:200px}.reticle{width:200px;height:200px}
+    .check{font-size:72px}.status{font-size:13px;letter-spacing:2px}
+    .corner{width:80px;height:80px}
+  }
+  .dotrow{margin-top:14px;display:flex;gap:8px}
+  .dotrow i{width:8px;height:8px;border-radius:50%;background:var(--cy);opacity:.4;animation:bl 1.2s infinite}
+  .dotrow i:nth-child(2){animation-delay:.2s}.dotrow i:nth-child(3){animation-delay:.4s}
+  @keyframes bl{50%{opacity:1}}
+</style>
+</head>
+<body>
+  <div class="bg"></div><div class="grid"></div><div class="scan"></div><div class="vig"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+
+  <h1>J.A.R.V.I.S</h1>
+  <div class="sub">BIOMETRIC FACE AUTHENTICATION</div>
+
+  <div class="scanner">
+    <div class="ring r1"></div><div class="ring r2"></div>
+    <div class="frame"><img id="cam" alt="camera"><div class="sweepline"></div><div class="ray"></div><div class="check">✓</div></div>
+    <div class="reticle"></div>
+  </div>
+
+  <div class="status" id="authText">INITIALISING CAMERA…</div>
+  <div class="dotrow"><i></i><i></i><i></i></div>
+
+<script>
+  // called from Python via evaluate_js
+  window.setFrame = function(dataurl){ if(dataurl) document.getElementById('cam').src = dataurl; };
+  window.setAuthStatus = function(text, state){
+    const el = document.getElementById('authText');
+    el.textContent = text;
+    const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+    el.style.color = state==='ok' ? css('--green') : state==='deny' ? css('--red') : css('--cy');
+    const sc = document.querySelector('.scanner');
+    sc.classList.toggle('granted', state==='ok');
+    sc.classList.toggle('denied', state==='deny');
+  };
+</script>
+</body>
+</html>
